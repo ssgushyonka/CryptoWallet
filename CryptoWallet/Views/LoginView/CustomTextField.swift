@@ -25,6 +25,7 @@ final class CustomTextField: UITextField {
         backgroundColor = .white
         layer.cornerRadius = 25
         layer.masksToBounds = true
+        textColor = UIColor.black
         font = UIFont.poppinsRegular(size: 15)
         
         attributedPlaceholder = NSAttributedString(
