@@ -55,7 +55,21 @@ final class LoginViewController: UIViewController {
     
     private func bindViewModel() {
         loginViewModel.onLoginSuccess = { [weak self] in
-            // to the next view
+            DispatchQueue.main.async {
+                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                      let window = windowScene.windows.first else {
+                    return
+                }
+
+                let homeTabBarController = HomeTabViewController()
+                window.rootViewController = homeTabBarController
+                window.makeKeyAndVisible()
+
+                let transition = CATransition()
+                transition.type = .fade
+                transition.duration = 0.3
+                window.layer.add(transition, forKey: kCATransition)
+            }
         }
         
         loginViewModel.onLoginFailed = { [weak self] message in
@@ -124,7 +138,7 @@ final class LoginViewController: UIViewController {
         let passwordFieldBottomY = passwordFieldFrame.maxY
 
         if passwordFieldBottomY > keyboardTopY {
-            let overlap = passwordFieldBottomY - keyboardTopY + 20
+            let overlap = passwordFieldBottomY - keyboardTopY + 80
             view.frame.origin.y = -overlap
         }
     }
