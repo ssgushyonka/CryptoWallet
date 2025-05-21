@@ -31,7 +31,7 @@ final class CustomTextField: UITextField {
         attributedPlaceholder = NSAttributedString(
             string: placeholder,
             attributes: [
-                .foregroundColor: UIColor.subText
+                .foregroundColor: UIColor.grayPurple
             ]
         )
         iconImageView.image = icon

@@ -1,13 +1,13 @@
 import UIKit
 
-final class HomeTabViewController: UITabBarController {
+final class MainTabViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabs()
     }
     
     private func setupTabs() {
-        let viewController1 = EmptyViewController()
+        let viewController1 = CoinRatesViewController()
         let viewController2 = EmptyViewController()
         let viewController3 = EmptyViewController()
         let viewController4 = EmptyViewController()
@@ -25,7 +25,7 @@ final class HomeTabViewController: UITabBarController {
         let navigation4 = UINavigationController(rootViewController: viewController4)
         let navigation5 = UINavigationController(rootViewController: viewController5)
         
-        tabBar.tintColor = .loginButton
+        tabBar.tintColor = .darkBlue
         tabBar.backgroundColor = .white
         setViewControllers([navigation1, navigation2, navigation3, navigation4, navigation5], animated: true)
     }

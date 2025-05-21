@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let rootVC: UIViewController
 
         if authService.isLogin() {
-            rootVC = HomeTabViewController()
+            rootVC = MainTabViewController()
         } else {
             rootVC = LoginViewController(loginViewModel: LoginViewModel(authService: authService))
         }

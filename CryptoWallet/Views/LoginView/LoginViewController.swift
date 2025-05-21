@@ -26,7 +26,8 @@ final class LoginViewController: UIViewController {
     private lazy var loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("Login", for: .normal)
-        button.backgroundColor = UIColor.loginButton
+        button.titleLabel?.font = UIFont.poppinsSemiBold(size: 15)
+        button.backgroundColor = UIColor.darkPurple
         button.setTitleColor(UIColor.white, for: .normal)
         button.layer.cornerRadius = 25
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
@@ -61,7 +62,7 @@ final class LoginViewController: UIViewController {
                     return
                 }
 
-                let homeTabBarController = HomeTabViewController()
+                let homeTabBarController = MainTabViewController()
                 window.rootViewController = homeTabBarController
                 window.makeKeyAndVisible()
 
