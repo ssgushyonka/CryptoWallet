@@ -6,7 +6,6 @@ protocol AuthServiceProtocol {
     func logout()
 }
 
-
 final class AuthService: AuthServiceProtocol {
     private let userDefaultsManager: UserDefaultsManagerProtocol
 
@@ -39,6 +38,4 @@ final class AuthService: AuthServiceProtocol {
     func logout() {
         userDefaultsManager.removeObject(forKey: loginKey)
     }
-    
-    
 }

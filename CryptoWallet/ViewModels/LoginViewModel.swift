@@ -16,9 +16,7 @@ final class LoginViewModel: LoginViewModelProtocol {
     var password: String = ""
 
     var onLoginSuccess: (() -> Void)?
-    
     var onLoginFailed: ((String) -> Void)?
-    
     var onShowAlert: ((UIAlertController) -> Void)?
     
     func authenticate() {

@@ -3,6 +3,7 @@ import UIKit
 final class CoinRatesViewController: UIViewController {
     private lazy var viewModel = CoinRatesViewModel()
     private lazy var trendingTableView = TrendingTableView()
+    private let userDefaultsManager = UserDefaultsManager()
 
     private lazy var homeLabel: UILabel = {
         let label = UILabel()
@@ -41,9 +42,8 @@ final class CoinRatesViewController: UIViewController {
         return button
     }()
     
-    private let logoutButton: UIButton = {
+    private lazy var logoutButton: UIButton = {
         let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .white.withAlphaComponent(0.8)
         button.tintColor = .darkBlue
         button.layer.cornerRadius = 24
@@ -51,7 +51,49 @@ final class CoinRatesViewController: UIViewController {
         button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(toggleLogoutOptions), for: .touchUpInside)
         return button
+    }()
+
+    @objc private func toggleLogoutOptions() {
+        if logoutOptionsView.superview == nil {
+            view.addSubview(logoutOptionsView)
+            
+            NSLayoutConstraint.activate([
+                logoutOptionsView.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 8),
+                logoutOptionsView.trailingAnchor.constraint(equalTo: logoutButton.trailingAnchor),
+                logoutOptionsView.widthAnchor.constraint(equalToConstant: 160)
+            ])
+        } else {
+            logoutOptionsView.removeFromSuperview()
+        }
+    }
+    private func handleRefresh() {
+        print("Обновить данные")
+        logoutOptionsView.removeFromSuperview()
+        viewModel.fetchCoins()
+    }
+
+    private func handleExit() {
+        print("Выйти")
+        logoutOptionsView.removeFromSuperview()
+        navigationController?.popToRootViewController(animated: true)
+    }
+    
+    private lazy var logoutOptionsView: LogoutButtonView = {
+        let view = LogoutButtonView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.onRefresh = { [weak self] in
+            self?.viewModel.fetchCoins()
+        }
+        view.onExit = { [weak self] in
+            self?.userDefaultsManager.removeObject(forKey: "isLogin")
+            
+            let loginVC = LoginViewController()
+            loginVC.modalPresentationStyle = .fullScreen
+            self?.present(loginVC, animated: true, completion: nil)
+        }
+        return view
     }()
     
     private lazy var tableViewHeader: UIView = {
@@ -71,6 +113,14 @@ final class CoinRatesViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    private lazy var sortButton: UIButton = {
+        let button = UIButton()
+        button.setImage(.sortIcon, for: .normal)
+        button.addTarget(self, action: #selector(showSortOptions), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,11 +129,21 @@ final class CoinRatesViewController: UIViewController {
         setupConstraints()
         viewModel.fetchCoins()
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
     
     private func setupBindings() {
-        viewModel.onCoinsUpdated = { [weak self] in
+        viewModel.onCoinsUpdated = { [weak self] isLoading in
             guard let self = self else { return }
-            self.trendingTableView.update(with: self.viewModel.cellModels)
+            self.trendingTableView.update(with: self.viewModel.cellModels, isLoading: isLoading)
         }
         
         trendingTableView.onDidSelectCoin = { [weak self] coinModel in
@@ -105,12 +165,14 @@ final class CoinRatesViewController: UIViewController {
         view.addSubview(logoutButton)
         view.addSubview(tableViewHeader)
         view.addSubview(trendingLabel)
+        view.addSubview(sortButton)
         view.addSubview(trendingTableView)
-        
+
         NSLayoutConstraint.activate([
             homeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 57),
             homeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
             homeLabel.heightAnchor.constraint(equalToConstant: 48),
+            homeLabel.widthAnchor.constraint(equalToConstant: 97),
             
             subLabel.topAnchor.constraint(equalTo: homeLabel.bottomAnchor, constant: 46),
             subLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
@@ -139,10 +201,36 @@ final class CoinRatesViewController: UIViewController {
             trendingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
             trendingLabel.topAnchor.constraint(equalTo: tableViewHeader.topAnchor, constant: 24),
             
+            sortButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
+            sortButton.topAnchor.constraint(equalTo: tableViewHeader.topAnchor, constant: 24),
+            sortButton.heightAnchor.constraint(equalToConstant: 24),
+            sortButton.widthAnchor.constraint(equalToConstant: 24),
+            
             trendingTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             trendingTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             trendingTableView.topAnchor.constraint(equalTo: trendingLabel.bottomAnchor, constant: 16),
             trendingTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            
         ])
+    }
+    
+    @objc private func showSortOptions() {
+        let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
+
+        alert.addAction(UIAlertAction(title: "По возрастанию", style: .default) { [weak self] _ in
+            self?.viewModel.sortCoins(by: .more)
+        })
+
+        alert.addAction(UIAlertAction(title: "По убыванию", style: .default) { [weak self] _ in
+            self?.viewModel.sortCoins(by: .less)
+        })
+
+        alert.addAction(UIAlertAction(title: "Сбросить сортировку", style: .destructive) { [weak self] _ in
+            self?.viewModel.sortCoins(by: .none)
+        })
+
+        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+
+        present(alert, animated: true)
     }
 }

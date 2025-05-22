@@ -46,6 +46,7 @@ final class CustomSegmentedView: UIView {
         ])
         
         segmentedControl.layer.cornerRadius = 25
+        segmentedControl.clipsToBounds = true
         segmentedControl.layer.masksToBounds = true
     }
 }

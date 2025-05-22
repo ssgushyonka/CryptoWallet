@@ -3,23 +3,45 @@ import UIKit
 final class TrendingTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
     private var cellModels: [CoinCellModel] = []
     var onDidSelectCoin: ((CoinCellModel) -> Void)?
+    
+    private let loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
 
     init() {
         super.init(frame: .zero, style: .plain)
+        setupViews()
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+    
+    private func setupViews() {
         delegate = self
         dataSource = self
         separatorStyle = .none
         backgroundColor = .tableViewBack
         register(TrendingTableViewCell.self, forCellReuseIdentifier: TrendingTableViewCell.reuseIdentifier)
         translatesAutoresizingMaskIntoConstraints = false
-        rowHeight = 80
+        rowHeight = 70
+        
+        addSubview(loadingIndicator)
+        NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -50)
+        ])
     }
-
-    required init?(coder: NSCoder) { fatalError() }
-
-    func update(with models: [CoinCellModel]) {
-        self.cellModels = models
-        reloadData()
+    
+    func update(with models: [CoinCellModel], isLoading: Bool = false) {
+        if isLoading {
+            loadingIndicator.startAnimating()
+        } else {
+            loadingIndicator.stopAnimating()
+            self.cellModels = models
+            reloadData()
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

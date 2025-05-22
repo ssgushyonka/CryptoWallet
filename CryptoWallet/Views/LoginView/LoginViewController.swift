@@ -75,6 +75,7 @@ final class LoginViewController: UIViewController {
         
         loginViewModel.onLoginFailed = { [weak self] message in
             self?.passwordTextField.text = ""
+            self?.loginTextField.text = ""
         }
         
         loginViewModel.onShowAlert = { [weak self] alert in
@@ -128,7 +129,6 @@ final class LoginViewController: UIViewController {
         loginViewModel.username = loginTextField.text ?? ""
         loginViewModel.password = passwordTextField.text ?? ""
         loginViewModel.authenticate()
-        print("login tapped")
     }
 
     @objc private func keyboardWillShow(_ notification: Notification) {

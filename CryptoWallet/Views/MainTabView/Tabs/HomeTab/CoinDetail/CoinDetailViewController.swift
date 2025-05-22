@@ -2,6 +2,25 @@ import UIKit
 
 final class CoinDetailViewController: UIViewController {
     private let viewModel: CoinDetailViewModel
+    
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.setImage(.leftArrow, for: .normal)
+        button.backgroundColor = .white.withAlphaComponent(0.8)
+        button.layer.cornerRadius = 24
+        button.layer.masksToBounds = true
+        button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private lazy var coinNameLabel: UILabel = {
+        let label = UILabel()
+        label.font = .poppinsMedium(size: 14)
+        label.textColor = .darkBlue
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     private lazy var priceLabel: UILabel = {
         let label = UILabel()
@@ -109,6 +128,16 @@ final class CoinDetailViewController: UIViewController {
         setupConstraints()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
     private func setupUI() {
         view.backgroundColor = .detailViewBack
         
@@ -118,18 +147,12 @@ final class CoinDetailViewController: UIViewController {
             .foregroundColor: UIColor.darkPurple
         ]
         navigationController?.navigationBar.standardAppearance = appearance
-    }
-    
-    private func setupBindings() {
-        title = viewModel.coinName
-        priceLabel.text = viewModel.coinModel.price
-        percentLabel.text = viewModel.coinModel.percentChange
-        changeImageView.image = UIImage(named: viewModel.coinModel.changeIconName)
-        capitalizationPriceLabel.text = viewModel.coinModel.marketCap
-        suplyValueLabel.text = viewModel.coinModel.circulatingSupply
+        navigationItem.hidesBackButton = true
     }
     
     private func setupConstraints() {
+        view.addSubview(backButton)
+        view.addSubview(coinNameLabel)
         view.addSubview(priceLabel)
         view.addSubview(changeStackView)
         view.addSubview(dateSegmentedView)
@@ -141,11 +164,19 @@ final class CoinDetailViewController: UIViewController {
         view.addSubview(suplyValueLabel)
         
         NSLayoutConstraint.activate([
+            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 57),
+            backButton.heightAnchor.constraint(equalToConstant: 48),
+            backButton.widthAnchor.constraint(equalToConstant: 48),
+            
+            coinNameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            coinNameLabel.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
+
             priceLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            priceLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
+            priceLabel.topAnchor.constraint(equalTo: coinNameLabel.bottomAnchor, constant: 20),
             
             changeStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            changeStackView.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 15),
+            changeStackView.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 0),
             
             dateSegmentedView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             dateSegmentedView.topAnchor.constraint(equalTo: changeStackView.bottomAnchor, constant: 20),
@@ -172,5 +203,18 @@ final class CoinDetailViewController: UIViewController {
             suplyValueLabel.trailingAnchor.constraint(equalTo: backgroundCardView.trailingAnchor, constant: -25),
             suplyValueLabel.topAnchor.constraint(equalTo: marketCapitalizationLabel.bottomAnchor, constant: 18)
         ])
+    }
+    
+    private func setupBindings() {
+        coinNameLabel.text = viewModel.coinName
+        priceLabel.text = viewModel.coinModel.price
+        percentLabel.text = viewModel.coinModel.percentChange
+        changeImageView.image = UIImage(named: viewModel.coinModel.changeIconName)
+        capitalizationPriceLabel.text = viewModel.coinModel.marketCap
+        suplyValueLabel.text = viewModel.coinModel.circulatingSupply
+    }
+
+    @objc func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }
