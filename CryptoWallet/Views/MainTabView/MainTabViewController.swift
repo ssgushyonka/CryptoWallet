@@ -27,6 +27,9 @@ final class MainTabViewController: UITabBarController {
         
         tabBar.tintColor = .darkBlue
         tabBar.backgroundColor = .white
-        setViewControllers([navigation1, navigation2, navigation3, navigation4, navigation5], animated: true)
+        setViewControllers(
+            [navigation1, navigation2, navigation3, navigation4, navigation5],
+            animated: true
+        )
     }
 }

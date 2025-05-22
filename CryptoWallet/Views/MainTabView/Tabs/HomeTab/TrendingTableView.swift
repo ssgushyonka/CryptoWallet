@@ -2,6 +2,7 @@ import UIKit
 
 final class TrendingTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
     private var cellModels: [CoinCellModel] = []
+    var onDidSelectCoin: ((CoinCellModel) -> Void)?
 
     init() {
         super.init(frame: .zero, style: .plain)
@@ -36,5 +37,7 @@ final class TrendingTableView: UITableView, UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         deselectRow(at: indexPath, animated: true)
+        let selectedCoin = cellModels[indexPath.row]
+        onDidSelectCoin?(selectedCoin)
     }
 }

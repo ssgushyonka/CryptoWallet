@@ -85,6 +85,16 @@ final class CoinRatesViewController: UIViewController {
             guard let self = self else { return }
             self.trendingTableView.update(with: self.viewModel.cellModels)
         }
+        
+        trendingTableView.onDidSelectCoin = { [weak self] coinModel in
+            self?.showCoinDetailScreen(for: coinModel)
+        }
+    }
+    
+    private func showCoinDetailScreen(for coinModel: CoinCellModel) {
+        let detailViewModel = CoinDetailViewModel(coinModel: coinModel)
+        let detailVC = CoinDetailViewController(viewModel: detailViewModel)
+        navigationController?.pushViewController(detailVC, animated: true)
     }
     
     private func setupConstraints() {
