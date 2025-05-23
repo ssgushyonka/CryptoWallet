@@ -37,7 +37,6 @@ final class CoinRatesViewController: UIViewController {
         button.backgroundColor = .white
         button.setTitleColor(.darkBlue, for: .normal)
         button.layer.cornerRadius = 17.5
-        //button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -54,20 +53,6 @@ final class CoinRatesViewController: UIViewController {
         button.addTarget(self, action: #selector(toggleLogoutOptions), for: .touchUpInside)
         return button
     }()
-
-    @objc private func toggleLogoutOptions() {
-        if logoutOptionsView.superview == nil {
-            view.addSubview(logoutOptionsView)
-            
-            NSLayoutConstraint.activate([
-                logoutOptionsView.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 8),
-                logoutOptionsView.trailingAnchor.constraint(equalTo: logoutButton.trailingAnchor),
-                logoutOptionsView.widthAnchor.constraint(equalToConstant: 160)
-            ])
-        } else {
-            logoutOptionsView.removeFromSuperview()
-        }
-    }
 
     private lazy var logoutOptionsView: LogoutButtonView = {
         let view = LogoutButtonView()
@@ -106,7 +91,21 @@ final class CoinRatesViewController: UIViewController {
     private lazy var sortButton: UIButton = {
         let button = UIButton()
         button.setImage(.sortIcon, for: .normal)
-        button.addTarget(self, action: #selector(showSortOptions), for: .touchUpInside)
+
+        let menu = UIMenu(title: "Сортировка", children: [
+            UIAction(title: "По возрастанию", handler: { [weak self] _ in
+                self?.viewModel.sortCoins(by: .more)
+            }),
+            UIAction(title: "По убыванию", handler: { [weak self] _ in
+                self?.viewModel.sortCoins(by: .less)
+            }),
+            UIAction(title: "Сбросить сортировку", attributes: .destructive, handler: { [weak self] _ in
+                self?.viewModel.sortCoins(by: .none)
+            })
+        ])
+
+        button.menu = menu
+        button.showsMenuAsPrimaryAction = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -212,24 +211,19 @@ final class CoinRatesViewController: UIViewController {
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
-    @objc private func showSortOptions() {
-        let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
-
-        alert.addAction(UIAlertAction(title: "По возрастанию", style: .default) { [weak self] _ in
-            self?.viewModel.sortCoins(by: .more)
-        })
-
-        alert.addAction(UIAlertAction(title: "По убыванию", style: .default) { [weak self] _ in
-            self?.viewModel.sortCoins(by: .less)
-        })
-
-        alert.addAction(UIAlertAction(title: "Сбросить сортировку", style: .destructive) { [weak self] _ in
-            self?.viewModel.sortCoins(by: .none)
-        })
-
-        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
-
-        present(alert, animated: true)
+    @objc private func toggleLogoutOptions() {
+        if logoutOptionsView.superview == nil {
+            view.addSubview(logoutOptionsView)
+            
+            NSLayoutConstraint.activate([
+                logoutOptionsView.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 8),
+                logoutOptionsView.trailingAnchor.constraint(equalTo: logoutButton.trailingAnchor),
+                logoutOptionsView.widthAnchor.constraint(equalToConstant: 157),
+                logoutOptionsView.heightAnchor.constraint(equalToConstant: 102)
+            ])
+        } else {
+            logoutOptionsView.removeFromSuperview()
+        }
     }
 }
 

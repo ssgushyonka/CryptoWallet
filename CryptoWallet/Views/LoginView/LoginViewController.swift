@@ -36,6 +36,14 @@ final class LoginViewController: UIViewController {
         return button
     }()
 
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.color = .white
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .back
@@ -58,6 +66,7 @@ final class LoginViewController: UIViewController {
         view.addSubview(loginTextField)
         view.addSubview(passwordTextField)
         view.addSubview(loginButton)
+        view.addSubview(activityIndicator)
 
         NSLayoutConstraint.activate([
             mainImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.MainImage.sides),
@@ -67,7 +76,7 @@ final class LoginViewController: UIViewController {
                 constant: LayoutConstants.MainImage.topAnchor
             ),
             mainImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.MainImage.height),
-            
+
             loginTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.Fields.sides),
             loginTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -LayoutConstants.Fields.sides),
             loginTextField.topAnchor.constraint(equalTo: mainImageView.bottomAnchor, constant: LayoutConstants.Fields.topAnchor),
@@ -77,11 +86,14 @@ final class LoginViewController: UIViewController {
             passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -LayoutConstants.Fields.sides),
             passwordTextField.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: LayoutConstants.Fields.space),
             passwordTextField.heightAnchor.constraint(equalToConstant: LayoutConstants.Fields.height),
-            
+
             loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.Fields.sides),
             loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -LayoutConstants.Fields.sides),
             loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: LayoutConstants.Fields.space),
-            loginButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Fields.height)
+            loginButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Fields.height),
+
+            activityIndicator.centerXAnchor.constraint(equalTo: loginButton.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: loginButton.centerYAnchor)
         ])
     }
 
@@ -110,6 +122,20 @@ final class LoginViewController: UIViewController {
 
         loginViewModel.onShowAlert = { [weak self] alert in
             self?.present(alert, animated: true)
+        }
+
+        loginViewModel.onLoadingStateChanged = { [weak self] isLoading in
+            DispatchQueue.main.async {
+                if isLoading {
+                    self?.activityIndicator.startAnimating()
+                    self?.loginButton.setTitle("", for: .normal)
+                    self?.loginButton.isUserInteractionEnabled = false
+                } else {
+                    self?.activityIndicator.stopAnimating()
+                    self?.loginButton.setTitle("Login", for: .normal)
+                    self?.loginButton.isUserInteractionEnabled = true
+                }
+            }
         }
     }
 

@@ -6,6 +6,8 @@ protocol LoginViewModelProtocol {
     var onLoginSuccess: (() -> Void)? { get set }
     var onLoginFailed: ((String) -> Void)? { get set }
     var onShowAlert: ((UIAlertController) -> Void)? { get set }
+    var isLoading: Bool { get set }
+    var onLoadingStateChanged: ((Bool) -> Void)? { get set }
     func authenticate()
     func handleFailedLogin(message: String)
 }
@@ -18,14 +20,21 @@ final class LoginViewModel: LoginViewModelProtocol {
     var onLoginSuccess: (() -> Void)?
     var onLoginFailed: ((String) -> Void)?
     var onShowAlert: ((UIAlertController) -> Void)?
+    var isLoading: Bool = false {
+            didSet {
+                onLoadingStateChanged?(isLoading)
+            }
+        }
+    var onLoadingStateChanged: ((Bool) -> Void)?
     
     func authenticate() {
         guard correctInputs() else {
             onLoginFailed?("Enter all the fields")
             return
         }
-        
+        isLoading = true
         authService.login(username: username, password: password) { [weak self] success in
+            self?.isLoading = false
             if success {
                 self?.onLoginSuccess?()
             } else {
