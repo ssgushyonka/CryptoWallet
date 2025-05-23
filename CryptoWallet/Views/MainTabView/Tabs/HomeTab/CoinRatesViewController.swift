@@ -68,18 +68,7 @@ final class CoinRatesViewController: UIViewController {
             logoutOptionsView.removeFromSuperview()
         }
     }
-    private func handleRefresh() {
-        print("Обновить данные")
-        logoutOptionsView.removeFromSuperview()
-        viewModel.fetchCoins()
-    }
 
-    private func handleExit() {
-        print("Выйти")
-        logoutOptionsView.removeFromSuperview()
-        navigationController?.popToRootViewController(animated: true)
-    }
-    
     private lazy var logoutOptionsView: LogoutButtonView = {
         let view = LogoutButtonView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -142,20 +131,7 @@ final class CoinRatesViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
-    
-    private func setupBindings() {
-        viewModel.onCoinsUpdated = { [weak self] isLoading in
-            guard let self = self else { return }
-            self.trendingTableView.update(with: self.viewModel.cellModels, isLoading: isLoading)
-        }
-    }
 
-    private func showCoinDetailScreen(for coinModel: CoinCellModel) {
-        let detailViewModel = CoinCellViewModel(model: coinModel)
-        let detailVC = CoinDetailViewController(viewModel: detailViewModel)
-        navigationController?.pushViewController(detailVC, animated: true)
-    }
-    
     private func setupConstraints() {
         view.addSubview(homeLabel)
         view.addSubview(subLabel)
@@ -212,7 +188,30 @@ final class CoinRatesViewController: UIViewController {
             
         ])
     }
-    
+
+    private func handleRefresh() {
+        logoutOptionsView.removeFromSuperview()
+        viewModel.fetchCoins()
+    }
+
+    private func handleExit() {
+        logoutOptionsView.removeFromSuperview()
+        navigationController?.popToRootViewController(animated: true)
+    }
+
+    private func setupBindings() {
+        viewModel.onCoinsUpdated = { [weak self] isLoading in
+            guard let self = self else { return }
+            self.trendingTableView.update(with: self.viewModel.cellModels, isLoading: isLoading)
+        }
+    }
+
+    private func showCoinDetailScreen(for coinModel: CoinCellModel) {
+        let detailViewModel = CoinCellViewModel(model: coinModel)
+        let detailVC = CoinDetailViewController(viewModel: detailViewModel)
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
     @objc private func showSortOptions() {
         let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
 

@@ -55,7 +55,7 @@ final class CoinDetailViewController: UIViewController {
     }()
     
     private lazy var dateSegmentedView: CustomSegmentedView = {
-        let view = CustomSegmentedView()
+        let view = CustomSegmentedView(segments: ["24H", "1W", "1Y", "ALL", "Point"])
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -180,8 +180,6 @@ final class CoinDetailViewController: UIViewController {
             
             dateSegmentedView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             dateSegmentedView.topAnchor.constraint(equalTo: changeStackView.bottomAnchor, constant: 20),
-            dateSegmentedView.widthAnchor.constraint(equalToConstant: 325),
-            dateSegmentedView.heightAnchor.constraint(equalToConstant: 56),
             
             backgroundCardView.topAnchor.constraint(equalTo: view.topAnchor, constant: 570),
             backgroundCardView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
