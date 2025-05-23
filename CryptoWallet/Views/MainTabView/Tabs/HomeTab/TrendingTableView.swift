@@ -1,8 +1,7 @@
 import UIKit
 
-final class TrendingTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
+final class TrendingTableView: UITableView {
     private var cellModels: [CoinCellModel] = []
-    var onDidSelectCoin: ((CoinCellModel) -> Void)?
     
     private let loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
@@ -19,8 +18,6 @@ final class TrendingTableView: UITableView, UITableViewDataSource, UITableViewDe
     required init?(coder: NSCoder) { fatalError() }
     
     private func setupViews() {
-        delegate = self
-        dataSource = self
         separatorStyle = .none
         backgroundColor = .tableViewBack
         register(TrendingTableViewCell.self, forCellReuseIdentifier: TrendingTableViewCell.reuseIdentifier)
@@ -43,26 +40,12 @@ final class TrendingTableView: UITableView, UITableViewDataSource, UITableViewDe
             reloadData()
         }
     }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    func getCellModel(at indexPath: IndexPath) -> CoinCellModel {
+        return cellModels[indexPath.row]
+    }
+    
+    func getCellModelsCount() -> Int {
         return cellModels.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = dequeueReusableCell(withIdentifier: TrendingTableViewCell.reuseIdentifier, for: indexPath) as? TrendingTableViewCell else {
-            return UITableViewCell()
-        }
-
-        let model = cellModels[indexPath.row]
-        let viewModel = CoinCellViewModel(model: model)
-
-        cell.configure(with: viewModel)
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        deselectRow(at: indexPath, animated: true)
-        let selectedCoin = cellModels[indexPath.row]
-        onDidSelectCoin?(selectedCoin)
     }
 }

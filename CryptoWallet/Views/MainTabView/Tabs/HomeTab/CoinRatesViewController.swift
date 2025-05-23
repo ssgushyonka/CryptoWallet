@@ -127,6 +127,9 @@ final class CoinRatesViewController: UIViewController {
         view.backgroundColor = .lightPink
         setupBindings()
         setupConstraints()
+
+        trendingTableView.delegate = self
+        trendingTableView.dataSource = self
         viewModel.fetchCoins()
     }
 
@@ -145,12 +148,8 @@ final class CoinRatesViewController: UIViewController {
             guard let self = self else { return }
             self.trendingTableView.update(with: self.viewModel.cellModels, isLoading: isLoading)
         }
-        
-        trendingTableView.onDidSelectCoin = { [weak self] coinModel in
-            self?.showCoinDetailScreen(for: coinModel)
-        }
     }
-    
+
     private func showCoinDetailScreen(for coinModel: CoinCellModel) {
         let detailViewModel = CoinCellViewModel(model: coinModel)
         let detailVC = CoinDetailViewController(viewModel: detailViewModel)
@@ -232,5 +231,32 @@ final class CoinRatesViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
 
         present(alert, animated: true)
+    }
+}
+
+// MARK: - UITableViewDataSource and UITableViewDelegate
+extension CoinRatesViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let trendingTableView = tableView as? TrendingTableView else { return 0 }
+        return trendingTableView.getCellModelsCount()
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let trendingTableView = tableView as? TrendingTableView,
+              let cell = tableView.dequeueReusableCell(withIdentifier: TrendingTableViewCell.reuseIdentifier, for: indexPath) as? TrendingTableViewCell else {
+            return UITableViewCell()
+        }
+
+        let model = trendingTableView.getCellModel(at: indexPath)
+        let viewModel = CoinCellViewModel(model: model)
+        cell.configure(with: viewModel)
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        guard let trendingTableView = tableView as? TrendingTableView else { return }
+        let selectedCoin = trendingTableView.getCellModel(at: indexPath)
+        showCoinDetailScreen(for: selectedCoin)
     }
 }
