@@ -19,6 +19,7 @@ final class LoginViewController: UIViewController {
     
     private let passwordTextField: CustomTextField = {
         let textField = CustomTextField(icon: UIImage.lockIcon, placeholder: "Password")
+        textField.isSecureTextEntry = true
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -38,8 +39,7 @@ final class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.back
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tapGesture)
+        setupKeyboardConfiguration()
 
         setupUI()
         bindViewModel()
@@ -55,13 +55,12 @@ final class LoginViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        loginViewModel.onLoginSuccess = { [weak self] in
+        loginViewModel.onLoginSuccess = {
             DispatchQueue.main.async {
                 guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                       let window = windowScene.windows.first else {
                     return
                 }
-
                 let homeTabBarController = MainTabViewController()
                 window.rootViewController = homeTabBarController
                 window.makeKeyAndVisible()
@@ -72,17 +71,17 @@ final class LoginViewController: UIViewController {
                 window.layer.add(transition, forKey: kCATransition)
             }
         }
-        
+
         loginViewModel.onLoginFailed = { [weak self] message in
             self?.passwordTextField.text = ""
             self?.loginTextField.text = ""
         }
-        
+
         loginViewModel.onShowAlert = { [weak self] alert in
             self?.present(alert, animated: true)
         }
     }
-    
+
     private func setupUI() {
         view.addSubview(mainImageView)
         view.addSubview(loginTextField)
@@ -111,19 +110,12 @@ final class LoginViewController: UIViewController {
             loginButton.heightAnchor.constraint(equalToConstant: 55)
         ])
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
     }
 
-    
     // MARK: - objc funcs
     @objc private func loginButtonTapped() {
         loginViewModel.username = loginTextField.text ?? ""
@@ -131,24 +123,58 @@ final class LoginViewController: UIViewController {
         loginViewModel.authenticate()
     }
 
-    @objc private func keyboardWillShow(_ notification: Notification) {
-        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-        let keyboardTopY = view.frame.height - keyboardFrame.height
+    private func setupKeyboardConfiguration() {
+        setupKeyboardObservers()
+        setupDismissKeyboardGesture()
+    }
 
-        let passwordFieldFrame = passwordTextField.convert(passwordTextField.bounds, to: view)
-        let passwordFieldBottomY = passwordFieldFrame.maxY
+    private func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(notification:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(notification:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
 
-        if passwordFieldBottomY > keyboardTopY {
-            let overlap = passwordFieldBottomY - keyboardTopY + 80
-            view.frame.origin.y = -overlap
+    @objc
+    private func keyboardWillShow(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        let fixedOffset: CGFloat = 220
+        UIView.animate(withDuration: duration) {
+            self.view.frame.origin.y = -fixedOffset
         }
     }
 
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        view.frame.origin.y = 0
+    @objc
+    private func keyboardWillHide(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval,
+              let curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt else { return }
+
+        UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions(rawValue: curve)) {
+            self.view.frame.origin.y = 0
+        }
     }
 
-    @objc private func dismissKeyboard() {
-        view.endEditing(true)
+    private func setupDismissKeyboardGesture() {
+        let dismissKeyboardTap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        dismissKeyboardTap.cancelsTouchesInView = false
+        view.addGestureRecognizer(dismissKeyboardTap)
+    }
+
+    @objc private func handleTap(_ recognizer: UITapGestureRecognizer) {
+        let tapLocation = recognizer.location(in: view)
+
+        if !loginButton.frame.contains(tapLocation) {
+            view.endEditing(true)
+        }
     }
 }
