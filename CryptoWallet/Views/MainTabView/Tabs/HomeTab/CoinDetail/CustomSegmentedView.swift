@@ -91,12 +91,12 @@ final class CustomSegmentedView: UIView {
         if #available(iOS 15.0, *) {
             var config = UIButton.Configuration.plain()
             config.title = title
-            config.baseForegroundColor = .grayPurple
+            config.baseForegroundColor = .segmentedText
             button = UIButton(configuration: config, primaryAction: nil)
         } else {
             button = UIButton(type: .system)
             button.setTitle(title, for: .normal)
-            button.setTitleColor(.grayPurple, for: .normal)
+            button.setTitleColor(.segmentedText, for: .normal)
             button.setTitleColor(.darkBlue, for: .selected)
         }
         button.titleLabel?.font = UIFont.poppinsMedium(size: 14)
@@ -113,12 +113,12 @@ final class CustomSegmentedView: UIView {
             button.isSelected = isSelected
             if #available(iOS 15.0, *) {
                 var config = button.configuration ?? UIButton.Configuration.plain()
-                config.baseForegroundColor = isSelected ? .darkBlue : .grayPurple
+                config.baseForegroundColor = isSelected ? .darkBlue : .segmentedText
 
                 let font = isSelected ? UIFont.poppinsSemiBold(size: 14) : UIFont.poppinsRegular(size: 14)
                 let attributes: [NSAttributedString.Key: Any] = [
                     .font: font ?? UIFont.systemFont(ofSize: 14),
-                    .foregroundColor: isSelected ? UIColor.darkBlue : UIColor.grayPurple
+                    .foregroundColor: isSelected ? UIColor.darkBlue : UIColor.segmentedText
                 ]
                 config.attributedTitle = AttributedString(NSAttributedString(string: segments[index], attributes: attributes))
 
@@ -135,7 +135,7 @@ final class CustomSegmentedView: UIView {
                 }
                 button.configuration = config
             } else {
-                button.setTitleColor(isSelected ? .darkBlue : .grayPurple, for: .normal)
+                button.setTitleColor(isSelected ? .darkBlue : .segmentedText, for: .normal)
                 button.titleLabel?.font = isSelected ? UIFont.poppinsSemiBold(size: 14) : UIFont.poppinsRegular(size: 14)
                 button.titleLabel?.textAlignment = isSelected
                     ? (index == 0 ? .left : (index == segments.count - 1 ? .right : .center))
