@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 final class CoinCellViewModel {
     private let model: CoinCellModel
@@ -54,5 +55,8 @@ final class CoinCellViewModel {
         let formatted = decimalFormatter.string(from: NSNumber(value: supplyInCoins)) ?? "–"
         
         return "\(formatted) \(model.shortName)"
+    }
+    var coinImage: UIImage? {
+        UIImage(named: shortName.lowercased())
     }
 }

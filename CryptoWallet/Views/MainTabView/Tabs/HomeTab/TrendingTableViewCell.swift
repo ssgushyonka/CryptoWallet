@@ -2,6 +2,15 @@ import UIKit
 
 final class TrendingTableViewCell: UITableViewCell {
     static let reuseIdentifier = "TrendingTableViewCell"
+    
+    private lazy var coinImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = .lightGray.withAlphaComponent(0.5)
+        imageView.layer.cornerRadius = 25
+        imageView.layer.masksToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
 
     private lazy var coinNameLabel: UILabel = {
         let label = UILabel()
@@ -54,7 +63,8 @@ final class TrendingTableViewCell: UITableViewCell {
             coinNameLabel,
             shortCoinNameLabel,
             priceLabel,
-            changeStackView
+            changeStackView,
+            coinImageView
         ]
         subViews.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -73,10 +83,16 @@ final class TrendingTableViewCell: UITableViewCell {
         priceLabel.text = viewModel.price
         procentChangeLabel.text = viewModel.percentChange
         changeIconView.image = UIImage(named: viewModel.changeIconName)
+        coinImageView.image = viewModel.coinImage
     }
 
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            coinImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 25),
+            coinImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            coinImageView.heightAnchor.constraint(equalToConstant: 50),
+            coinImageView.widthAnchor.constraint(equalToConstant: 50),
+
             coinNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 94),
             coinNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
 
