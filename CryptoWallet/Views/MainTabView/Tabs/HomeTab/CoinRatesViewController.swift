@@ -144,46 +144,46 @@ final class CoinRatesViewController: UIViewController {
         view.addSubview(trendingTableView)
 
         NSLayoutConstraint.activate([
-            homeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 57),
-            homeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            homeLabel.heightAnchor.constraint(equalToConstant: 48),
-            homeLabel.widthAnchor.constraint(equalToConstant: 97),
+            homeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: LayoutConstants.Margins.top),
+            homeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.Margins.horizontal),
+            homeLabel.heightAnchor.constraint(equalToConstant: LayoutConstants.Sizes.homeLabel.height),
+            homeLabel.widthAnchor.constraint(equalToConstant: LayoutConstants.Sizes.homeLabel.width),
             
-            subLabel.topAnchor.constraint(equalTo: homeLabel.bottomAnchor, constant: 46),
-            subLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            subLabel.heightAnchor.constraint(equalToConstant: 30),
+            subLabel.topAnchor.constraint(equalTo: homeLabel.bottomAnchor, constant: LayoutConstants.Spacing.xxLarge),
+            subLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.Margins.horizontal),
+            subLabel.heightAnchor.constraint(equalToConstant: LayoutConstants.Sizes.subLabelHeight),
             
-            homeImage.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 21),
-            homeImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 189),
-            homeImage.heightAnchor.constraint(equalToConstant: 242),
-            homeImage.widthAnchor.constraint(equalToConstant: 242),
+            homeImage.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: LayoutConstants.Spacing.large),
+            homeImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.Sizes.homeImageLeading),
+            homeImage.heightAnchor.constraint(equalToConstant: LayoutConstants.Sizes.homeImage),
+            homeImage.widthAnchor.constraint(equalToConstant: LayoutConstants.Sizes.homeImage),
             
-            learnMoreButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            learnMoreButton.topAnchor.constraint(equalTo: subLabel.bottomAnchor, constant: 12),
-            learnMoreButton.heightAnchor.constraint(equalToConstant: 35),
-            learnMoreButton.widthAnchor.constraint(equalToConstant: 127),
+            learnMoreButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.Margins.horizontal),
+            learnMoreButton.topAnchor.constraint(equalTo: subLabel.bottomAnchor, constant: LayoutConstants.Spacing.small),
+            learnMoreButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Sizes.learnMoreButton.height),
+            learnMoreButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Sizes.learnMoreButton.width),
             
-            logoutButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 57),
-            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
-            logoutButton.heightAnchor.constraint(equalToConstant: 48),
-            logoutButton.widthAnchor.constraint(equalToConstant: 48),
+            logoutButton.topAnchor.constraint(equalTo: view.topAnchor, constant: LayoutConstants.Margins.top),
+            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -LayoutConstants.Margins.horizontal),
+            logoutButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Sizes.logoutButton),
+            logoutButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Sizes.logoutButton),
             
             tableViewHeader.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableViewHeader.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableViewHeader.topAnchor.constraint(equalTo: learnMoreButton.bottomAnchor, constant: 55),
+            tableViewHeader.topAnchor.constraint(equalTo: learnMoreButton.bottomAnchor, constant: LayoutConstants.Spacing.header),
             tableViewHeader.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            trendingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            trendingLabel.topAnchor.constraint(equalTo: tableViewHeader.topAnchor, constant: 24),
+            trendingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.Margins.horizontal),
+            trendingLabel.topAnchor.constraint(equalTo: tableViewHeader.topAnchor, constant: LayoutConstants.Spacing.xLarge),
             
-            sortButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
-            sortButton.topAnchor.constraint(equalTo: tableViewHeader.topAnchor, constant: 24),
-            sortButton.heightAnchor.constraint(equalToConstant: 24),
-            sortButton.widthAnchor.constraint(equalToConstant: 24),
+            sortButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -LayoutConstants.Margins.horizontal),
+            sortButton.topAnchor.constraint(equalTo: tableViewHeader.topAnchor, constant: LayoutConstants.Spacing.xLarge),
+            sortButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Sizes.sortButton),
+            sortButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Sizes.sortButton),
             
             trendingTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             trendingTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            trendingTableView.topAnchor.constraint(equalTo: trendingLabel.bottomAnchor, constant: 16),
+            trendingTableView.topAnchor.constraint(equalTo: trendingLabel.bottomAnchor, constant: LayoutConstants.Spacing.medium),
             trendingTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
             
         ])
@@ -257,5 +257,31 @@ extension CoinRatesViewController: UITableViewDataSource, UITableViewDelegate {
         guard let trendingTableView = tableView as? TrendingTableView else { return }
         let selectedCoin = trendingTableView.getCellModel(at: indexPath)
         showCoinDetailScreen(for: selectedCoin)
+    }
+}
+
+private enum LayoutConstants {
+    enum Margins {
+        static let horizontal: CGFloat = 25
+        static let top: CGFloat = 57
+    }
+
+    enum Spacing {
+        static let small: CGFloat = 12
+        static let medium: CGFloat = 16
+        static let large: CGFloat = 21
+        static let xLarge: CGFloat = 24
+        static let xxLarge: CGFloat = 46
+        static let header: CGFloat = 55
+    }
+
+    enum Sizes {
+        static let homeLabel = CGSize(width: 97, height: 48)
+        static let subLabelHeight: CGFloat = 30
+        static let learnMoreButton = CGSize(width: 127, height: 35)
+        static let logoutButton: CGFloat = 48
+        static let sortButton: CGFloat = 24
+        static let homeImage: CGFloat = 242
+        static let homeImageLeading: CGFloat = 189
     }
 }

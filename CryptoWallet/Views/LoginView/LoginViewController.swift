@@ -40,7 +40,6 @@ final class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .back
         setupKeyboardConfiguration()
-
         setupUI()
         bindViewModel()
     }
@@ -61,25 +60,28 @@ final class LoginViewController: UIViewController {
         view.addSubview(loginButton)
 
         NSLayoutConstraint.activate([
-            mainImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 44),
-            mainImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -44),
-            mainImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
-            mainImageView.heightAnchor.constraint(equalToConstant: 287),
+            mainImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.MainImage.sides),
+            mainImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -LayoutConstants.MainImage.sides),
+            mainImageView.topAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.topAnchor,
+                constant: LayoutConstants.MainImage.topAnchor
+            ),
+            mainImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.MainImage.height),
             
-            loginTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            loginTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
-            loginTextField.topAnchor.constraint(equalTo: mainImageView.bottomAnchor, constant: 174),
-            loginTextField.heightAnchor.constraint(equalToConstant: 55),
+            loginTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.Fields.sides),
+            loginTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -LayoutConstants.Fields.sides),
+            loginTextField.topAnchor.constraint(equalTo: mainImageView.bottomAnchor, constant: LayoutConstants.Fields.topAnchor),
+            loginTextField.heightAnchor.constraint(equalToConstant: LayoutConstants.Fields.height),
             
-            passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
-            passwordTextField.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 20),
-            passwordTextField.heightAnchor.constraint(equalToConstant: 55),
+            passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.Fields.sides),
+            passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -LayoutConstants.Fields.sides),
+            passwordTextField.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: LayoutConstants.Fields.space),
+            passwordTextField.heightAnchor.constraint(equalToConstant: LayoutConstants.Fields.height),
             
-            loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
-            loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 20),
-            loginButton.heightAnchor.constraint(equalToConstant: 55)
+            loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.Fields.sides),
+            loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -LayoutConstants.Fields.sides),
+            loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: LayoutConstants.Fields.space),
+            loginButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Fields.height)
         ])
     }
 
@@ -171,5 +173,19 @@ final class LoginViewController: UIViewController {
         if !loginButton.frame.contains(tapLocation) {
             view.endEditing(true)
         }
+    }
+}
+
+private enum LayoutConstants {
+    enum Fields {
+        static let topAnchor: CGFloat = 174
+        static let height: CGFloat = 55
+        static let sides: CGFloat = 25
+        static let space: CGFloat = 20
+    }
+    enum MainImage {
+        static let topAnchor: CGFloat = 13
+        static let height: CGFloat = 287
+        static let sides: CGFloat = 44
     }
 }

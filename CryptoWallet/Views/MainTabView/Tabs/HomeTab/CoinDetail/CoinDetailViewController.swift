@@ -164,43 +164,42 @@ final class CoinDetailViewController: UIViewController {
         view.addSubview(suplyValueLabel)
         
         NSLayoutConstraint.activate([
-            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 57),
-            backButton.heightAnchor.constraint(equalToConstant: 48),
-            backButton.widthAnchor.constraint(equalToConstant: 48),
+            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.backButtonLeading),
+            backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: LayoutConstants.backButtonTop),
+            backButton.heightAnchor.constraint(equalToConstant: LayoutConstants.backButtonSize),
+            backButton.widthAnchor.constraint(equalToConstant: LayoutConstants.backButtonSize),
             
             coinNameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             coinNameLabel.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
-
+            
             priceLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            priceLabel.topAnchor.constraint(equalTo: coinNameLabel.bottomAnchor, constant: 20),
+            priceLabel.topAnchor.constraint(equalTo: coinNameLabel.bottomAnchor, constant: LayoutConstants.mediumSpacing),
             
             changeStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            changeStackView.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 0),
+            changeStackView.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: LayoutConstants.noSpacing),
             
             dateSegmentedView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            dateSegmentedView.topAnchor.constraint(equalTo: changeStackView.bottomAnchor, constant: 20),
+            dateSegmentedView.topAnchor.constraint(equalTo: changeStackView.bottomAnchor, constant: LayoutConstants.mediumSpacing),
             
-            backgroundCardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -160),
+            backgroundCardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -LayoutConstants.cardTopOffset),
             backgroundCardView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundCardView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             backgroundCardView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            //backgroundCardView.heightAnchor.constraint(equalToConstant: 160),
             
-            marketStatisticLabel.leadingAnchor.constraint(equalTo: backgroundCardView.leadingAnchor, constant: 25),
-            marketStatisticLabel.topAnchor.constraint(equalTo: backgroundCardView.topAnchor, constant: 25),
+            marketStatisticLabel.leadingAnchor.constraint(equalTo: backgroundCardView.leadingAnchor, constant: LayoutConstants.cardContentLeading),
+            marketStatisticLabel.topAnchor.constraint(equalTo: backgroundCardView.topAnchor, constant: LayoutConstants.cardTopInset),
             
-            marketCapitalizationLabel.leadingAnchor.constraint(equalTo: backgroundCardView.leadingAnchor, constant: 25),
-            marketCapitalizationLabel.topAnchor.constraint(equalTo: marketStatisticLabel.bottomAnchor, constant: 15),
+            marketCapitalizationLabel.leadingAnchor.constraint(equalTo: backgroundCardView.leadingAnchor, constant: LayoutConstants.cardContentLeading),
+            marketCapitalizationLabel.topAnchor.constraint(equalTo: marketStatisticLabel.bottomAnchor, constant: LayoutConstants.smallSpacing),
             
-            circulatingSuplyLabel.leadingAnchor.constraint(equalTo: backgroundCardView.leadingAnchor, constant: 25),
-            circulatingSuplyLabel.topAnchor.constraint(equalTo: marketCapitalizationLabel.bottomAnchor, constant: 15),
+            circulatingSuplyLabel.leadingAnchor.constraint(equalTo: backgroundCardView.leadingAnchor, constant: LayoutConstants.cardContentLeading),
+            circulatingSuplyLabel.topAnchor.constraint(equalTo: marketCapitalizationLabel.bottomAnchor, constant: LayoutConstants.smallSpacing),
             
-            capitalizationPriceLabel.trailingAnchor.constraint(equalTo: backgroundCardView.trailingAnchor, constant: -25),
-            capitalizationPriceLabel.topAnchor.constraint(equalTo: marketStatisticLabel.bottomAnchor, constant: 15),
-            
-            suplyValueLabel.trailingAnchor.constraint(equalTo: backgroundCardView.trailingAnchor, constant: -25),
-            suplyValueLabel.topAnchor.constraint(equalTo: marketCapitalizationLabel.bottomAnchor, constant: 15)
+            capitalizationPriceLabel.trailingAnchor.constraint(equalTo: backgroundCardView.trailingAnchor, constant: -LayoutConstants.cardContentLeading),
+            capitalizationPriceLabel.topAnchor.constraint(equalTo: marketStatisticLabel.bottomAnchor, constant: LayoutConstants.smallSpacing),
+
+            suplyValueLabel.trailingAnchor.constraint(equalTo: backgroundCardView.trailingAnchor, constant: -LayoutConstants.cardContentLeading),
+            suplyValueLabel.topAnchor.constraint(equalTo: marketCapitalizationLabel.bottomAnchor, constant: LayoutConstants.smallSpacing)
         ])
     }
     
@@ -216,4 +215,18 @@ final class CoinDetailViewController: UIViewController {
     @objc func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
+}
+
+private enum LayoutConstants {
+    static let backButtonLeading: CGFloat = 25
+    static let backButtonTop: CGFloat = 57
+    static let backButtonSize: CGFloat = 48
+    
+    static let mediumSpacing: CGFloat = 20
+    static let smallSpacing: CGFloat = 15
+    static let noSpacing: CGFloat = 0
+    
+    static let cardTopOffset: CGFloat = 160
+    static let cardContentLeading: CGFloat = 25
+    static let cardTopInset: CGFloat = 25
 }

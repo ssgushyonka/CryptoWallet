@@ -1,7 +1,7 @@
 import UIKit
 
 final class MainTabBar: UITabBar {
-    private var customHeight: CGFloat = 80
+    private var customHeight: CGFloat = 82
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -17,7 +17,7 @@ final class MainTabBar: UITabBar {
         super.layoutSubviews()
         subviews
             .filter { $0 is UIControl }
-            .forEach { $0.frame.origin.y = 12 }
+            .forEach { $0.frame.origin.y = 17 }
     }
 
     override func sizeThatFits(_ size: CGSize) -> CGSize {
