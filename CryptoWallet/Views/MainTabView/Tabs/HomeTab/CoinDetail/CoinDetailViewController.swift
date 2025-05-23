@@ -1,7 +1,7 @@
 import UIKit
 
 final class CoinDetailViewController: UIViewController {
-    private let viewModel: CoinDetailViewModel
+    private let viewModel: CoinCellViewModel
     
     private lazy var backButton: UIButton = {
         let button = UIButton()
@@ -112,7 +112,7 @@ final class CoinDetailViewController: UIViewController {
         return label
     }()
     
-    init(viewModel: CoinDetailViewModel) {
+    init(viewModel: CoinCellViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -206,12 +206,12 @@ final class CoinDetailViewController: UIViewController {
     }
     
     private func setupBindings() {
-        coinNameLabel.text = viewModel.coinName
-        priceLabel.text = viewModel.coinModel.price
-        percentLabel.text = viewModel.coinModel.percentChange
-        changeImageView.image = UIImage(named: viewModel.coinModel.changeIconName)
-        capitalizationPriceLabel.text = viewModel.coinModel.marketCap
-        suplyValueLabel.text = viewModel.coinModel.circulatingSupply
+        coinNameLabel.text = "\(viewModel.fullName) (\(viewModel.shortName))"
+        priceLabel.text = viewModel.price
+        percentLabel.text = viewModel.percentChange
+        changeImageView.image = UIImage(named: viewModel.changeIconName)
+        capitalizationPriceLabel.text = viewModel.marketCap
+        suplyValueLabel.text = viewModel.circulatingSupplyInCoins
     }
 
     @objc func backButtonTapped() {

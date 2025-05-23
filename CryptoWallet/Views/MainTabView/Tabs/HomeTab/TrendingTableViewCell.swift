@@ -67,12 +67,12 @@ final class TrendingTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with model: CoinCellModel) {
-        coinNameLabel.text = model.fullName
-        shortCoinNameLabel.text = model.shortName
-        priceLabel.text = model.price
-        procentChangeLabel.text = model.percentChange
-        changeIconView.image = UIImage(named: model.changeIconName)
+    func configure(with viewModel: CoinCellViewModel) {
+        coinNameLabel.text = viewModel.fullName
+        shortCoinNameLabel.text = viewModel.shortName
+        priceLabel.text = viewModel.price
+        procentChangeLabel.text = viewModel.percentChange
+        changeIconView.image = UIImage(named: viewModel.changeIconName)
     }
 
     private func setupConstraints() {

@@ -152,7 +152,7 @@ final class CoinRatesViewController: UIViewController {
     }
     
     private func showCoinDetailScreen(for coinModel: CoinCellModel) {
-        let detailViewModel = CoinDetailViewModel(coinModel: coinModel)
+        let detailViewModel = CoinCellViewModel(model: coinModel)
         let detailVC = CoinDetailViewController(viewModel: detailViewModel)
         navigationController?.pushViewController(detailVC, animated: true)
     }

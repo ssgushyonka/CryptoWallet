@@ -52,8 +52,11 @@ final class TrendingTableView: UITableView, UITableViewDataSource, UITableViewDe
         guard let cell = dequeueReusableCell(withIdentifier: TrendingTableViewCell.reuseIdentifier, for: indexPath) as? TrendingTableViewCell else {
             return UITableViewCell()
         }
+
         let model = cellModels[indexPath.row]
-        cell.configure(with: model)
+        let viewModel = CoinCellViewModel(model: model)
+
+        cell.configure(with: viewModel)
         return cell
     }
 
