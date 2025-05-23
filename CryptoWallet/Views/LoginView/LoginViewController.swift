@@ -38,7 +38,7 @@ final class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.back
+        view.backgroundColor = .back
         setupKeyboardConfiguration()
 
         setupUI()
@@ -52,34 +52,6 @@ final class LoginViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func bindViewModel() {
-        loginViewModel.onLoginSuccess = {
-            DispatchQueue.main.async {
-                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                      let window = windowScene.windows.first else {
-                    return
-                }
-                let homeTabBarController = MainTabViewController()
-                window.rootViewController = homeTabBarController
-                window.makeKeyAndVisible()
-
-                let transition = CATransition()
-                transition.type = .fade
-                transition.duration = 0.3
-                window.layer.add(transition, forKey: kCATransition)
-            }
-        }
-
-        loginViewModel.onLoginFailed = { [weak self] message in
-            self?.passwordTextField.text = ""
-            self?.loginTextField.text = ""
-        }
-
-        loginViewModel.onShowAlert = { [weak self] alert in
-            self?.present(alert, animated: true)
-        }
     }
 
     private func setupUI() {
@@ -111,18 +83,41 @@ final class LoginViewController: UIViewController {
         ])
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
+    private func bindViewModel() {
+        loginViewModel.onLoginSuccess = {
+            DispatchQueue.main.async {
+                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                      let window = windowScene.windows.first else {
+                    return
+                }
+                let homeTabBarController = MainTabViewController()
+                window.rootViewController = homeTabBarController
+                window.makeKeyAndVisible()
+
+                let transition = CATransition()
+                transition.type = .fade
+                transition.duration = 0.3
+                window.layer.add(transition, forKey: kCATransition)
+            }
+        }
+
+        loginViewModel.onLoginFailed = { [weak self] message in
+            self?.passwordTextField.text = ""
+            self?.loginTextField.text = ""
+        }
+
+        loginViewModel.onShowAlert = { [weak self] alert in
+            self?.present(alert, animated: true)
+        }
     }
 
-    // MARK: - objc funcs
     @objc private func loginButtonTapped() {
         loginViewModel.username = loginTextField.text ?? ""
         loginViewModel.password = passwordTextField.text ?? ""
         loginViewModel.authenticate()
     }
 
+    // MARK: - Keyboard setup
     private func setupKeyboardConfiguration() {
         setupKeyboardObservers()
         setupDismissKeyboardGesture()

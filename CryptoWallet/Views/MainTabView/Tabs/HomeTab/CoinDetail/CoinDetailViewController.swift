@@ -181,10 +181,11 @@ final class CoinDetailViewController: UIViewController {
             dateSegmentedView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             dateSegmentedView.topAnchor.constraint(equalTo: changeStackView.bottomAnchor, constant: 20),
             
-            backgroundCardView.topAnchor.constraint(equalTo: view.topAnchor, constant: 570),
+            backgroundCardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -160),
             backgroundCardView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundCardView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             backgroundCardView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            //backgroundCardView.heightAnchor.constraint(equalToConstant: 160),
             
             marketStatisticLabel.leadingAnchor.constraint(equalTo: backgroundCardView.leadingAnchor, constant: 25),
             marketStatisticLabel.topAnchor.constraint(equalTo: backgroundCardView.topAnchor, constant: 25),
@@ -193,13 +194,13 @@ final class CoinDetailViewController: UIViewController {
             marketCapitalizationLabel.topAnchor.constraint(equalTo: marketStatisticLabel.bottomAnchor, constant: 15),
             
             circulatingSuplyLabel.leadingAnchor.constraint(equalTo: backgroundCardView.leadingAnchor, constant: 25),
-            circulatingSuplyLabel.topAnchor.constraint(equalTo: marketCapitalizationLabel.bottomAnchor, constant: 18),
+            circulatingSuplyLabel.topAnchor.constraint(equalTo: marketCapitalizationLabel.bottomAnchor, constant: 15),
             
             capitalizationPriceLabel.trailingAnchor.constraint(equalTo: backgroundCardView.trailingAnchor, constant: -25),
             capitalizationPriceLabel.topAnchor.constraint(equalTo: marketStatisticLabel.bottomAnchor, constant: 15),
             
             suplyValueLabel.trailingAnchor.constraint(equalTo: backgroundCardView.trailingAnchor, constant: -25),
-            suplyValueLabel.topAnchor.constraint(equalTo: marketCapitalizationLabel.bottomAnchor, constant: 18)
+            suplyValueLabel.topAnchor.constraint(equalTo: marketCapitalizationLabel.bottomAnchor, constant: 15)
         ])
     }
     

@@ -3,9 +3,14 @@ import UIKit
 final class MainTabViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupCustomTabBar()
         setupTabs()
     }
-    
+
+    private func setupCustomTabBar() {
+        self.setValue(MainTabBar(), forKey: "tabBar")
+    }
+
     private func setupTabs() {
         let viewController1 = CoinRatesViewController()
         let viewController2 = EmptyViewController()
